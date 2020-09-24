@@ -22,7 +22,7 @@ async def on_ready():
 async def on_message(message):
     print('[{0.created_at}] {0.guild}/{0.channel} - {0.author}: {0.content}'.format(message))
     if bot.user in message.mentions:
-        if message.author.id == bot.owner_id:
+        if message.author.id == int(bot.owner_id):
             await message.channel.send(f"Hey")
         else:
             await message.channel.send("Please do not mention me.")
@@ -76,6 +76,13 @@ async def announce(ctx, channel_id, *, message):
     channel_id = int(channel_id)
     channel = bot.get_channel(channel_id)
     await channel.send(message)
+    
+@bot.command()
+@commands.is_owner()
+async def logoff(ctx):
+    await ctx.send("Log off signal received. Have a good day.")
+    await bot.close()
+
 
 if __name__ == '__main__':
     starting_extensions = ['cogs.basic_commands', 'cogs.weather']
