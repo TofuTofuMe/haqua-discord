@@ -4,7 +4,7 @@
 import discord
 from discord.ext import commands
 import random
-import wikipedia
+import wikipediaapi
 import textwrap
 
 class BasicCommands(commands.Cog):
@@ -38,10 +38,11 @@ class BasicCommands(commands.Cog):
 
     @commands.command()
     async def wiki(self, ctx, *, arg):
-        wiki = wikipedia.page(arg)
-        wikiSum = textwrap.shorten(wiki.summary, 500)
-        embed = discord.Embed(title=wiki.title, url=wiki.url, description=wikiSum)
-        embed.set_thumbnail(url=wiki.images[0])
+        wiki = wikipediaapi.Wikipedia('en')
+        wiki_page = wiki.page(arg)
+        wikiSum = textwrap.shorten(wiki_page.summary, 500)
+        embed = discord.Embed(title=wiki_page.title, url=wiki_page.canonicalurl, description=wikiSum)
+#        embed.set_thumbnail(url=wiki.images[0])
         embed.set_footer(text='wikipedia.org')
         await ctx.send(embed=embed)
 
