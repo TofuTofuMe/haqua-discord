@@ -2,15 +2,34 @@
 # written by GrenadeSpamr
 
 import discord
+import logging
 import signal
 from discord.ext import commands
 from dotenv import load_dotenv
-from os import listdir, environ
+from logging.handlers import RotatingFileHandler
+from os import listdir, environ, path
+
+log_file = "logs/haqua.log"
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=1000*4096, mode='w', backupCount=5)
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+if path.isfile(log_file):
+    logger.debug("Log end.")
+    handler.doRollover()
 
 load_dotenv()
-bot = commands.Bot(command_prefix='.')
 discord_token = environ.get('discord_token')
 game = discord.Game("with GrenadeSpamr")
+owner_id = ' '
+bot_id = ' '
+
+intents = discord.Intents()
+intents.messages = True
+intents.members = True
+intents.guilds = True
+bot = commands.Bot(command_prefix='.', intents=intents)
 
 @bot.event
 async def on_ready():
@@ -76,13 +95,12 @@ async def announce(ctx, channel_id, *, message):
     channel_id = int(channel_id)
     channel = bot.get_channel(channel_id)
     await channel.send(message)
-    
+
 @bot.command()
 @commands.is_owner()
 async def logoff(ctx):
     await ctx.send("Log off signal received. Have a good day.")
     await bot.close()
-
 
 if __name__ == '__main__':
     starting_extensions = ['cogs.basic_commands', 'cogs.weather']
