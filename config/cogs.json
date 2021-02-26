@@ -1,0 +1,9 @@
+{
+    "starting_cogs": [
+        "cogs.basic_commands",
+        "cogs.weather",
+        "cogs.news",
+        "cogs.reddit",
+        "cogs.rainbowsix"
+    ]
+}
